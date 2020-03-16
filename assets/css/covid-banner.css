@@ -1,5 +1,5 @@
-.covid-19-banner {
-  background-color: green;
+.coronavirus-banner {
+  background-color: red;
   color: white;
   padding: 10px;
   position: sticky;
@@ -20,48 +20,52 @@
     align-items: center;
 }
 
-.covid-19-banner.kits-unavailable {
-  background-color: red;
-}
 
-.covid-19-banner__title {
+.coronavirus-banner__title {
   font-weight: normal;
   margin: 0;
   line-height: 1.2;
   font-size: 110%;
 }
 
-.covid-19-banner__title strong { font-weight: bold; }
+.coronavirus-banner__title strong { font-weight: bold; }
 
-.covid-19-banner__icon {
-  margin-right: 1em;
+.coronavirus-banner__icon {
+  margin-right: .5em;
 }
-.covid-19-banner__icon svg {
+.coronavirus-banner__icon svg {
   width: auto;
   max-width: none;
   height: 100%;
   max-height: 32px;
 }
 
-.covid-19-banner .btn,
-.covid-19-banner .button {
-  margin-left: 1.5em;
+.coronavirus-banner__button {
+  padding: 8px;
+  margin-left: 2em;
   color: red;
   border-color: white;
   background-color: white;
   text-transform: uppercase;
   font-weight: bold;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: opacity 0.2s ease-in-out;
+}
+.coronavirus-banner__button:hover,
+.coronavirus-banner__button:active,
+.coronavirus-banner__button:focus {
+  color: red;
+  background-color: white;
+  transform: translateY(2px);
+  opacity: 0.9;
 }
 
-.covid-19-banner.kits-available .btn,
-.covid-19-banner.kits-available .button {
-  color: green;
-}
 
 @media screen and (min-width: 769px) {
-  .covid-19-banner__title { font-size: 150%; }
+  .coronavirus-banner__title { font-size: 150%; }
 }
 
 @media screen and (min-width: 992px) {
-  .covid-19-banner__title { font-size: 180%; }
+  .coronavirus-banner__title { font-size: 180%; }
 }
