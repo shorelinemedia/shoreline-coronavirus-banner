@@ -3,7 +3,7 @@
 * Plugin Name:          Shoreline Coronavirus Banner
 * Plugin URI:           https://github.com/shorelinemedia/shoreline-coronavirus-banner
 * Description:          Add a banner to a WP site that lets you customize the banner text and add a link/button
-* Version:              1.0.0
+* Version:              1.0.1
 * Author:               Shoreline Media
 * Author URI:           https://shoreline.media
 * License:              GNU General Public License v2
@@ -29,7 +29,7 @@ if (!function_exists( 'shoreline_coronavirus_banner' ) ) {
 
     // Enable banner
     $wp_customize->add_setting( 'shoreline_coronavirus_enable_banner', array(
-      'capability' => 'edit_theme_options',
+      'capability' => 'edit_published_posts',
       'sanitize_callback' => 'shoreline_coronavirus_banner_sanitize_checkbox',
     ) );
 
@@ -38,6 +38,19 @@ if (!function_exists( 'shoreline_coronavirus_banner' ) ) {
       'section' => 'shoreline_coronavirus_banner_section', // Add a default or your own section
       'label' => __( 'Enable sitewide Coronavirus banner?' ),
       'description' => __( 'Once enabled, your site will have a banner on the top of the site with the information used below. Do not enable until link and text are accurate.' ),
+    ) );
+
+    // Enable sticky banner
+    $wp_customize->add_setting( 'shoreline_coronavirus_enable_sticky', array(
+      'capability' => 'edit_published_posts',
+      'sanitize_callback' => 'shoreline_coronavirus_banner_sanitize_checkbox',
+    ) );
+
+    $wp_customize->add_control( 'shoreline_coronavirus_enable_sticky', array(
+      'type' => 'checkbox',
+      'section' => 'shoreline_coronavirus_banner_section', // Add a default or your own section
+      'label' => __( 'Make the banner sticky?' ),
+      'description' => __( 'Once enabled, your banner will stick to the top of the screen when the user scrolls. Make sure it doesn\'t compete with a stick main menu/navigation before activating.' ),
     ) );
 
     // Banner Text
@@ -92,8 +105,7 @@ if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
           'text' => '',
        ), $atts));
 
-       // Build html
-       $html = '';
+       $html = $html_class = '';
 
        // Get Customizer/theme mod setting for kit status
        $enabled = get_theme_mod( 'shoreline_coronavirus_enable_banner' );
@@ -119,11 +131,15 @@ if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
        // SVG Icon
        $icon = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/images/icon-medical-test.svg' );
 
+       // Is banner sticky?
+       $is_sticky = get_theme_mod( 'shoreline_coronavirus_enable_sticky', false );
+
+       if ( $is_sticky ) $html_class .= ' is-sticky';
        ob_start();
        // Build the HTML markup below and use the $text variable
        ?>
 
-       <aside role="banner" class="coronavirus-banner">
+       <aside role="banner" class="coronavirus-banner <?php echo $html_class; ?>">
          <div class="coronavirus-banner__icon"><?php echo $icon; ?></div>
          <h2 class="coronavirus-banner__title"><strong>Coronavirus Alert:</strong> <?php echo $text; ?></h2>
          <?php if ( !empty( $link ) ) { ?>
