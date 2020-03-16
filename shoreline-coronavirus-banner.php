@@ -18,7 +18,7 @@ if (!function_exists( 'shoreline_coronavirus_banner' ) ) {
 
     $wp_customize->add_section( 'shoreline_coronavirus_banner_section', array(
       'title' => __( 'Coronavirus Banner' ),
-      'description' => __( 'Update sitewide settings for the COVID-19 pandemic' ),
+      'description' => __( 'Update the Coronavirus sitewide banner settings' ),
       'panel' => '', // Not typically needed.
       'priority' => 160,
       // Authors can access this section
