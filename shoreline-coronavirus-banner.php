@@ -53,6 +53,24 @@ if (!function_exists( 'shoreline_coronavirus_banner' ) ) {
       'description' => __( 'Once enabled, your banner will stick to the top of the screen when the user scrolls. Make sure it doesn\'t compete with a stick main menu/navigation before activating.' ),
     ) );
 
+    // // Sticky position
+    // $wp_customize->add_setting( 'shoreline_coronavirus_sticky_position', array(
+    //   'capability' => 'edit_published_posts',
+    //   'default' => 'top'
+    //
+    // ) );
+    //
+    // $wp_customize->add_control( 'shoreline_coronavirus_sticky_position', array(
+    //   'type' => 'select',
+    //   'section' => 'shoreline_coronavirus_banner_section', // Add a default or your own section
+    //   'label' => __( 'Sticky position' ),
+    //   'description' => __( 'Stick the banner to the bottom or top of the website' ),
+    //   'choices' => array(
+    //     'top' => __( 'Top' ),
+    //     'bottom' => __( 'Bottom' )
+    //   )
+    // ) );
+
     // Banner Text
     $wp_customize->add_setting( 'shoreline_coronavirus_banner_text', array(
       'capability' => 'edit_published_posts'
@@ -134,8 +152,12 @@ if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
 
        // Is banner sticky?
        $is_sticky = get_theme_mod( 'shoreline_coronavirus_enable_sticky', false );
-
        if ( $is_sticky ) $html_class .= ' is-sticky';
+
+       // // Sticky position (top by default)
+       // $sticky_position = get_theme_mod( 'shoreline_coronavirus_sticky_position' , 'top' );
+       // $html_class .=  $is_sticky ? ' is-sticky--' . $sticky_position : '';
+
        ob_start();
        // Build the HTML markup below and use the $text variable
        ?>
@@ -159,7 +181,11 @@ if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
 if ( !function_exists( 'shoreline_coronavirus_banner_init' ) ) {
   function shoreline_coronavirus_banner_init() {
     // Hook the shortcode output directly into the template using wp_body_open
-    add_action( 'wp_body_open', 'shoreline_coronavirus_banner_add_to_body', 100 );
+    if ( function_exists( 'kleo_after_body' ) ) {
+      add_action( 'kleo_after_body', 'shoreline_coronavirus_banner_add_to_body', 100 );
+    } elseif ( function_exists( 'wp_body_open' ) ) {
+      add_action( 'wp_body_open', 'shoreline_coronavirus_banner_add_to_body', 100 );
+    }
   }
   add_action( 'init', 'shoreline_coronavirus_banner_init', 20 );
 }
