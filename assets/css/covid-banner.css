@@ -37,13 +37,14 @@
 .coronavirus-banner__title strong { font-weight: bold; }
 
 .coronavirus-banner__icon {
-  margin-right: .5em;
+  margin-right: 1em;
+  width: 100%;
+  max-width: 32px;
 }
 .coronavirus-banner__icon svg {
-  width: auto;
+  width: 100%;
   max-width: none;
   height: 100%;
-  max-height: 32px;
 }
 
 .coronavirus-banner__button {
