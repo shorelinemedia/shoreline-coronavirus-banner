@@ -121,7 +121,8 @@ if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
        // Set default text based on customizer checkbox
        $default_text = $site_title . ' is making efforts to contain the Coronavirus';
        // Use custom text if supplied, or else use default true/false text
-       $text = !empty( get_theme_mod( 'shoreline_coronavirus_banner_text' ) ) ? get_theme_mod( 'shoreline_coronavirus_banner_text' ) : $default_text;
+       $customizer_text = get_theme_mod( 'shoreline_coronavirus_banner_text', '' );
+       $text = !empty( $customizer_text ) ? $customizer_text : $default_text;
 
        // Get the optional link
        $link = get_theme_mod( 'shoreline_coronavirus_banner_link' );
