@@ -12,6 +12,10 @@
 * GitHub Plugin URI:    https://github.com/shorelinemedia/shoreline-coronavirus-banner
 */
 
+// Establish global var that we output in the banner
+$sl9_coronavirus_banner_render = true;
+
+
 // Customizer scoped to 'editor' user role to set true/false about test kit availability
 if (!function_exists( 'shoreline_coronavirus_banner' ) ) {
   function shoreline_coronavirus_banner( $wp_customize ) {
@@ -119,60 +123,70 @@ if ( !function_exists( 'shoreline_coronavirus_banner_assets' ) ) {
 // Shortcode to output the banner
 if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
   function sl9_covid_19_test_kits_banner_shortcode( $atts = array(), $content = null ) {
-       extract(shortcode_atts(array(
-          'text' => '',
-       ), $atts));
+       global $sl9_coronavirus_banner_render;
 
-       $html = $html_class = '';
+       if ( $sl9_coronavirus_banner_render ) {
 
-       // Get Customizer/theme mod setting for kit status
-       $enabled = get_theme_mod( 'shoreline_coronavirus_enable_banner' );
+         // Set our global to false so we don't render again
+         $sl9_coronavirus_banner_render = false;
+         extract(shortcode_atts(array(
+           'text' => '',
+         ), $atts));
 
-       // Don't output banner if it is not enabled
-       if ( !$enabled ) return;
+         $html = $html_class = '';
 
-       // Enqueue styles
-       wp_enqueue_style( 'shoreline_coronavirus_banner' );
+         // Get Customizer/theme mod setting for kit status
+         $enabled = get_theme_mod( 'shoreline_coronavirus_enable_banner' );
 
-       // Get the site title by default to use in banner text
-       $site_title = get_bloginfo('name');
-       // Set default text based on customizer checkbox
-       $default_text = $site_title . ' is making efforts to contain the Coronavirus';
-       // Use custom text if supplied, or else use default true/false text
-       $customizer_text = get_theme_mod( 'shoreline_coronavirus_banner_text', '' );
-       $text = !empty( $customizer_text ) ? $customizer_text : $default_text;
+         // Don't output banner if it is not enabled
+         if ( !$enabled ) return;
 
-       // Get the optional link
-       $link = get_theme_mod( 'shoreline_coronavirus_banner_link' );
+         // Enqueue styles
+         wp_enqueue_style( 'shoreline_coronavirus_banner' );
 
-       $link = !empty( $link ) ? $link : '';
+         // Get the site title by default to use in banner text
+         $site_title = get_bloginfo('name');
+         // Set default text based on customizer checkbox
+         $default_text = $site_title . ' is making efforts to contain the Coronavirus';
+         // Use custom text if supplied, or else use default true/false text
+         $customizer_text = get_theme_mod( 'shoreline_coronavirus_banner_text', '' );
+         $text = !empty( $customizer_text ) ? $customizer_text : $default_text;
 
-       // SVG Icon
-       $icon = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/images/icon-medical-test.svg' );
+         // Get the optional link
+         $link = get_theme_mod( 'shoreline_coronavirus_banner_link' );
 
-       // Is banner sticky?
-       $is_sticky = get_theme_mod( 'shoreline_coronavirus_enable_sticky', false );
-       if ( $is_sticky ) $html_class .= ' is-sticky';
+         $link = !empty( $link ) ? $link : '';
 
-       // // Sticky position (top by default)
-       // $sticky_position = get_theme_mod( 'shoreline_coronavirus_sticky_position' , 'top' );
-       // $html_class .=  $is_sticky ? ' is-sticky--' . $sticky_position : '';
+         // SVG Icon
+         $icon = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/images/icon-medical-test.svg' );
 
-       ob_start();
-       // Build the HTML markup below and use the $text variable
-       ?>
+         // Is banner sticky?
+         $is_sticky = get_theme_mod( 'shoreline_coronavirus_enable_sticky', false );
+         if ( $is_sticky ) $html_class .= ' is-sticky';
 
-       <aside role="banner" class="coronavirus-banner <?php echo $html_class; ?>">
-         <div class="coronavirus-banner__icon"><?php echo $icon; ?></div>
-         <h2 class="coronavirus-banner__title"><strong>Coronavirus Alert:</strong> <?php echo $text; ?></h2>
-         <?php if ( !empty( $link ) ) { ?>
-           <a class="coronavirus-banner__button" href="<?php echo $link; ?>">Learn More</a>
-         <?php } // endif is main site ?>
-       </aside>
+         // // Sticky position (top by default)
+         // $sticky_position = get_theme_mod( 'shoreline_coronavirus_sticky_position' , 'top' );
+         // $html_class .=  $is_sticky ? ' is-sticky--' . $sticky_position : '';
 
-       <?php
-       $html .= ob_get_clean();
-       return do_shortcode( $html );
+         ob_start();
+         // Build the HTML markup below and use the $text variable
+         ?>
+
+         <aside role="banner" class="coronavirus-banner <?php echo $html_class; ?>">
+           <div class="coronavirus-banner__icon"><?php echo $icon; ?></div>
+           <h2 class="coronavirus-banner__title"><strong>Coronavirus Alert:</strong> <?php echo $text; ?></h2>
+           <?php if ( !empty( $link ) ) { ?>
+             <a class="coronavirus-banner__button" href="<?php echo $link; ?>">Learn More</a>
+           <?php } // endif is main site ?>
+         </aside>
+
+         <?php
+         $html .= ob_get_clean();
+         return do_shortcode( $html );
+
+       } else {
+         return false;
+       }
   }
   add_shortcode( 'sl9_coronavirus_banner', 'sl9_covid_19_test_kits_banner_shortcode', 10, 2 );
 }
@@ -181,11 +195,8 @@ if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
 if ( !function_exists( 'shoreline_coronavirus_banner_init' ) ) {
   function shoreline_coronavirus_banner_init() {
     // Hook the shortcode output directly into the template using wp_body_open
-    if ( function_exists( 'kleo_after_body' ) ) {
-      add_action( 'kleo_after_body', 'shoreline_coronavirus_banner_add_to_body', 100 );
-    } elseif ( function_exists( 'wp_body_open' ) ) {
-      add_action( 'wp_body_open', 'shoreline_coronavirus_banner_add_to_body', 100 );
-    }
+    add_action( 'kleo_after_body', 'shoreline_coronavirus_banner_add_to_body', 100 );
+    add_action( 'wp_body_open', 'shoreline_coronavirus_banner_add_to_body', 100 );
   }
   add_action( 'init', 'shoreline_coronavirus_banner_init', 20 );
 }
