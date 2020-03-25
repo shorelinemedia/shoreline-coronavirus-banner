@@ -21,11 +21,14 @@
 .coronavirus-banner.is-sticky {
   position: sticky;
   z-index: 2001;
+  top: 0;
 }
 
 
-.coronavirus-banner.is-sticky--top { top: 0; }
-.coronavirus-banner.is-sticky--bottom { bottom: 0; }
+.coronavirus-banner.is-sticky--bottom {
+  top: initial; 
+  bottom: 0;
+}
 
 .coronavirus-banner__title {
   font-weight: normal;
