@@ -115,7 +115,7 @@ if (!function_exists( 'shoreline_coronavirus_banner_sanitize_checkbox' ) ) {
 // Register shortcode assets
 if ( !function_exists( 'shoreline_coronavirus_banner_assets' ) ) {
   function shoreline_coronavirus_banner_assets() {
-    wp_register_style( 'shoreline_coronavirus_banner', plugins_url( 'assets/css/covid-banner.css', __FILE__ ) );
+    wp_enqueue_style( 'shoreline_coronavirus_banner', plugins_url( 'assets/css/covid-banner.css', __FILE__ ) );
   }
   add_action( 'wp_enqueue_scripts', 'shoreline_coronavirus_banner_assets', 10, 0 );
 }
@@ -142,7 +142,7 @@ if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
          if ( !$enabled ) return;
 
          // Enqueue styles
-         wp_enqueue_style( 'shoreline_coronavirus_banner' );
+         //wp_enqueue_style( 'shoreline_coronavirus_banner' );
 
          // Get the site title by default to use in banner text
          $site_title = get_bloginfo('name');
