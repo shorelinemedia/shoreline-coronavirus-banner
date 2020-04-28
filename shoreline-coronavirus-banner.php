@@ -3,7 +3,7 @@
 * Plugin Name:          Shoreline Coronavirus Banner
 * Plugin URI:           https://github.com/shorelinemedia/shoreline-coronavirus-banner
 * Description:          Add a banner to a WP site that lets you customize the banner text and add a link/button
-* Version:              1.0.3
+* Version:              1.0.4
 * Author:               Shoreline Media
 * Author URI:           https://shoreline.media
 * License:              GNU General Public License v2
@@ -117,7 +117,7 @@ if ( !function_exists( 'shoreline_coronavirus_banner_assets' ) ) {
   function shoreline_coronavirus_banner_assets() {
     wp_register_style( 'shoreline_coronavirus_banner', plugins_url( 'assets/css/covid-banner.css', __FILE__ ) );
   }
-  add_action( 'wp_enqueue_scripts', 'shoreline_coronavirus_banner_assets' );
+  add_action( 'wp_enqueue_scripts', 'shoreline_coronavirus_banner_assets', 10, 0 );
 }
 
 // Shortcode to output the banner
