@@ -3,7 +3,7 @@
 * Plugin Name:          Shoreline Coronavirus Banner
 * Plugin URI:           https://github.com/shorelinemedia/shoreline-coronavirus-banner
 * Description:          Add a banner to a WP site that lets you customize the banner text and add a link/button
-* Version:              1.0.5
+* Version:              1.0.6
 * Author:               Shoreline Media
 * Author URI:           https://shoreline.media
 * License:              GNU General Public License v2
@@ -158,11 +158,17 @@ if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
          $link = !empty( $link ) ? $link : '';
 
          // SVG Icon
-         $icon = file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/images/icon-medical-test.svg' );
+         $icon = apply_filters( 'shoreline_coronavirus_banner_icon', file_get_contents( plugin_dir_path( __FILE__ ) . 'assets/images/icon-medical-test.svg' ) );
 
          // Is banner sticky?
          $is_sticky = get_theme_mod( 'shoreline_coronavirus_enable_sticky', false );
          if ( $is_sticky ) $html_class .= ' is-sticky';
+
+         // Customize banner title prefix through filter
+         $banner_title = apply_filters( 'shoreline_coronavirus_banner_title', '<strong>Coronavirus Alert:</strong>' );
+
+         // Customize button text through filter
+         $button_text = apply_filters( 'shoreline_coronavirus_banner_button_text', 'Learn More' );
 
          // // Sticky position (top by default)
          // $sticky_position = get_theme_mod( 'shoreline_coronavirus_sticky_position' , 'top' );
@@ -173,10 +179,12 @@ if ( !function_exists( 'sl9_covid_19_test_kits_banner_shortcode' ) ) {
          ?>
 
          <aside role="banner" class="coronavirus-banner <?php echo $html_class; ?>">
-           <div class="coronavirus-banner__icon"><?php echo $icon; ?></div>
-           <h2 class="coronavirus-banner__title"><strong>Coronavirus Alert:</strong> <?php echo $text; ?></h2>
+           <?php if ( !empty( $icon ) ) { ?>
+             <div class="coronavirus-banner__icon"><?php echo $icon; ?></div>
+           <?php } // endif $icon ?>
+           <h2 class="coronavirus-banner__title"><?php echo $banner_title; ?> <?php echo $text; ?></h2>
            <?php if ( !empty( $link ) ) { ?>
-             <a class="coronavirus-banner__button" href="<?php echo $link; ?>">Learn More</a>
+             <a class="coronavirus-banner__button" href="<?php echo $link; ?>"><?php echo $button_text; ?></a>
            <?php } // endif is main site ?>
          </aside>
 
